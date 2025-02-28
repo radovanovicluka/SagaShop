@@ -14,7 +14,7 @@ public class DAOException extends Exception {
     }
 
     public DAOException(final String pMessage, final Throwable throwable) {
-        super(pMessage,throwable);
+        super(pMessage, throwable);
     }
 
     public DAOException(final Throwable throwable) {

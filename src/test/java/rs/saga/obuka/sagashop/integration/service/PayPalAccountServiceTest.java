@@ -34,37 +34,37 @@ public class PayPalAccountServiceTest extends AbstractIntegrationTest {
     @Test
     public void savePayPalAccount() throws ServiceException {
 
-        CreateUserCmd cmd1 = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd1 = new CreateUserCmd("radovan", "password", "Luka", "R");
 
         User user = userService.save(cmd1);
 
         CreatePayPalAccountCmd cmd2 = new CreatePayPalAccountCmd("87646313", new BigDecimal(5498.13),
-                                "SRB", LocalDate.now(), new Address(), user.getId() );
+                "SRB", LocalDate.now(), new Address(), user.getId());
         PayPalAccount payPalAccount = payPalAccountService.save(cmd2);
 
         assertNotNull(payPalAccount);
         assertNotNull(payPalAccount.getId());
         assertNotNull(payPalAccount.getUser());
-        assertEquals(payPalAccount.getUser().getUsername(), "lukar");
+        assertEquals(payPalAccount.getUser().getUsername(), "radovan");
         assertEquals(cmd2.getAccountNumber(), payPalAccount.getAccountNumber());
     }
 
     @Test
     public void updatePayPalAccount() throws ServiceException {
 
-        CreateUserCmd cmd1 = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd1 = new CreateUserCmd("radovan", "password", "Luka", "R");
 
         User user = userService.save(cmd1);
 
         CreatePayPalAccountCmd cmd2 = new CreatePayPalAccountCmd("87646313", new BigDecimal(5498.13),
-                "SRB", LocalDate.now(), new Address(), user.getId() );
+                "SRB", LocalDate.now(), new Address(), user.getId());
         PayPalAccount payPalAccount = payPalAccountService.save(cmd2);
 
         assertNotNull(payPalAccount);
         assertNotNull(payPalAccount.getId());
 
         UpdatePayPalAccountCmd update = new UpdatePayPalAccountCmd(payPalAccount.getId(), payPalAccount.getAccountNumber(),
-                    payPalAccount.getBudget(), payPalAccount.getLanguage(), payPalAccount.getExpiresOn(), payPalAccount.getBillingAddress());
+                payPalAccount.getBudget(), payPalAccount.getLanguage(), payPalAccount.getExpiresOn(), payPalAccount.getBillingAddress());
         update.setLanguage("ENG");
         payPalAccountService.update(update);
 
@@ -79,12 +79,12 @@ public class PayPalAccountServiceTest extends AbstractIntegrationTest {
     @Test
     public void deletePayPalAccount() throws ServiceException {
 
-        CreateUserCmd cmd1 = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd1 = new CreateUserCmd("radovan", "password", "Luka", "R");
 
         User user = userService.save(cmd1);
 
         CreatePayPalAccountCmd cmd2 = new CreatePayPalAccountCmd("87646313", new BigDecimal(5498.13),
-                "SRB", LocalDate.now(), new Address(), user.getId() );
+                "SRB", LocalDate.now(), new Address(), user.getId());
         PayPalAccount payPalAccount = payPalAccountService.save(cmd2);
 
         assertNotNull(payPalAccount);
@@ -99,12 +99,12 @@ public class PayPalAccountServiceTest extends AbstractIntegrationTest {
     @Test
     public void findOne() throws ServiceException {
 
-        CreateUserCmd cmd1 = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd1 = new CreateUserCmd("radovan", "password", "Luka", "R");
 
         User user = userService.save(cmd1);
 
         CreatePayPalAccountCmd cmd2 = new CreatePayPalAccountCmd("87646313", new BigDecimal(5498.13),
-                "SRB", LocalDate.now(), new Address(), user.getId() );
+                "SRB", LocalDate.now(), new Address(), user.getId());
         PayPalAccount payPalAccount = payPalAccountService.save(cmd2);
         assertNotNull(payPalAccount);
         assertNotNull(payPalAccount.getId());
@@ -117,23 +117,23 @@ public class PayPalAccountServiceTest extends AbstractIntegrationTest {
 
     @Test
     public void findAll() throws ServiceException {
-        CreateUserCmd cmd1 = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd1 = new CreateUserCmd("radovan", "password", "Luka", "R");
 
         User user = userService.save(cmd1);
 
         CreatePayPalAccountCmd cmd2 = new CreatePayPalAccountCmd("87646313", new BigDecimal(5498.13),
-                "SRB", LocalDate.now(), new Address(), user.getId() );
+                "SRB", LocalDate.now(), new Address(), user.getId());
         PayPalAccount payPalAccount1 = payPalAccountService.save(cmd2);
 
         assertNotNull(payPalAccount1);
         assertNotNull(payPalAccount1.getId());
 
-        cmd1 = new CreateUserCmd( "urosr", "password","Uros", "R" );
+        cmd1 = new CreateUserCmd("urosr", "password", "Uros", "R");
 
         user = userService.save(cmd1);
 
         cmd2 = new CreatePayPalAccountCmd("9846131", new BigDecimal(8945.25),
-                "SRB", LocalDate.now(), new Address(), user.getId() );
+                "SRB", LocalDate.now(), new Address(), user.getId());
         PayPalAccount payPalAccount2 = payPalAccountService.save(cmd2);
 
         assertNotNull(payPalAccount2);

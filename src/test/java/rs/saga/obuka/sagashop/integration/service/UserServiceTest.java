@@ -25,36 +25,51 @@ public class UserServiceTest extends AbstractIntegrationTest {
     @Test
     public void saveUser() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
-        assertEquals("lukar", user.getUsername());
+        assertEquals("radovan", user.getUsername());
+        assertNotNull(user.getCreationDate());
+        assertNotNull(user.getCreatedBy());
+        assertNotNull(user.getLastModifiedBy());
+        assertNotNull(user.getLastModifiedDate());
 
     }
 
     @Test
     public void updateUser() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
 
-        UpdateUserCmd update = new UpdateUserCmd( user.getId(), user.getUsername(), user.getPassword(), user.getName(),
-                    user.getSurname());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        UpdateUserCmd update = new UpdateUserCmd(user.getId(), user.getUsername(), user.getPassword(), user.getName(),
+                user.getSurname());
         update.setName("Uros");
         userService.update(update);
 
         UserInfo info = userService.findById(user.getId());
         assertNotNull(info);
         assertEquals("Uros", info.getName());
+        assertNotNull(info.getAudit().getCreationDate());
+        assertNotNull(info.getAudit().getCreatedBy());
+        assertNotNull(info.getAudit().getLastModifiedBy());
+        assertNotNull(info.getAudit().getLastModifiedDate());
+        assertNotEquals(info.getAudit().getCreationDate(), info.getAudit().getLastModifiedDate());
     }
 
     @Test
     public void deleteUser() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
@@ -68,7 +83,7 @@ public class UserServiceTest extends AbstractIntegrationTest {
     @Test
     public void findOne() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
@@ -76,25 +91,25 @@ public class UserServiceTest extends AbstractIntegrationTest {
         UserInfo info = userService.findById(user.getId());
         assertNotNull(info);
         assertEquals(user.getId(), info.getId());
-        assertEquals("lukar", info.getUsername());
+        assertEquals("radovan", info.getUsername());
         assertEquals("Luka", info.getName());
     }
 
     @Test
     public void findAll() throws ServiceException {
 
-        CreateUserCmd cmd1 = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd1 = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user1 = userService.save(cmd1);
         assertNotNull(user1);
         assertNotNull(user1.getId());
 
-        CreateUserCmd cmd2 = new CreateUserCmd( "urosr", "password","Uros", "R" );
+        CreateUserCmd cmd2 = new CreateUserCmd("urosr", "password", "Uros", "R");
         User user2 = userService.save(cmd2);
         assertNotNull(user2);
         assertNotNull(user2.getId());
 
         List<UserResult> results = userService.findAll();
-        assertEquals(2, results.size());
+        assertEquals(5, results.size());
         assertTrue(results.stream().anyMatch(e -> e.getName().equals("Uros")));
         assertTrue(results.stream().anyMatch(e -> e.getName().equals("Luka")));
     }

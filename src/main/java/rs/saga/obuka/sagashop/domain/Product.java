@@ -1,6 +1,7 @@
 package rs.saga.obuka.sagashop.domain;
 
 import lombok.*;
+import rs.saga.obuka.sagashop.audit.Audit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product extends BaseEntity<Long> {
+public class Product extends Audit<Long> {
 
     @NotNull
     private BigDecimal price;
@@ -29,9 +30,9 @@ public class Product extends BaseEntity<Long> {
     @NotNull
     private Integer quantity;
 
-    @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name="category_product",
+            name = "category_product",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )

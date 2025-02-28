@@ -25,24 +25,34 @@ public class ProductServiceTest extends AbstractIntegrationTest {
 
     @Test
     public void saveProduct() throws ServiceException {
-        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10);
+        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10, null, null);
         Product product = productService.save(cmd);
         assertNotNull(product);
         assertNotNull(product.getId());
         assertEquals(cmd.getDescription(), product.getDescription());
         assertEquals(cmd.getName(), product.getName());
+        assertNotNull(product.getCreationDate());
+        assertNotNull(product.getCreatedBy());
+        assertNotNull(product.getLastModifiedBy());
+        assertNotNull(product.getLastModifiedDate());
     }
 
     @Test
     public void updateProduct() throws ServiceException {
 
-        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10);
+        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10, null, null);
         Product product = productService.save(cmd);
         assertNotNull(product);
         assertNotNull(product.getId());
 
-        UpdateProductCmd update = new UpdateProductCmd( product.getId(), product.getPrice(), product.getName(),
-                    product.getDescription(), product.getQuantity(), null);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        UpdateProductCmd update = new UpdateProductCmd(product.getId(), product.getPrice(), product.getName(),
+                product.getDescription(), product.getQuantity(), null, null);
         update.setName("update");
         productService.update(update);
 
@@ -50,13 +60,18 @@ public class ProductServiceTest extends AbstractIntegrationTest {
         assertNotNull(info);
         assertEquals(product.getId(), info.getId());
         assertEquals("update", info.getName());
+        assertNotNull(info.getAudit().getCreationDate());
+        assertNotNull(info.getAudit().getCreatedBy());
+        assertNotNull(info.getAudit().getLastModifiedBy());
+        assertNotNull(info.getAudit().getLastModifiedDate());
+        assertNotEquals(info.getAudit().getCreationDate(), info.getAudit().getLastModifiedDate());
 
     }
 
     @Test
     public void deleteProduct() throws ServiceException {
 
-        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10);
+        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10, null, null);
         Product product = productService.save(cmd);
         assertNotNull(product);
         assertNotNull(product.getId());
@@ -70,7 +85,7 @@ public class ProductServiceTest extends AbstractIntegrationTest {
     @Test
     public void findOne() throws ServiceException {
 
-        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10);
+        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10, null, null);
         Product product = productService.save(cmd);
         assertNotNull(product);
         assertNotNull(product.getId());
@@ -84,12 +99,12 @@ public class ProductServiceTest extends AbstractIntegrationTest {
     @Test
     public void findAll() throws ServiceException {
 
-        CreateProductCmd cmd1 = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10);
+        CreateProductCmd cmd1 = new CreateProductCmd(new BigDecimal(500), "TV - Samsung", "HDTV", 10, null, null);
         Product product1 = productService.save(cmd1);
         assertNotNull(product1);
         assertNotNull(product1.getId());
 
-        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(600), "Mis - Logitech", "Laserski", 15);
+        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(600), "Mis - Logitech", "Laserski", 15, null, null);
         Product product2 = productService.save(cmd);
         assertNotNull(product2);
         assertNotNull(product2.getId());

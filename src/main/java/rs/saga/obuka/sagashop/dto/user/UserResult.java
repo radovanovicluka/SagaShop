@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountResult;
+import rs.saga.obuka.sagashop.dto.audit.AuditDTO;
 
 import java.io.Serializable;
 
@@ -18,5 +18,6 @@ public class UserResult implements Serializable {
     private String username;
     private String name;
     private String surname;
+    private AuditDTO audit = new AuditDTO();
 
 }

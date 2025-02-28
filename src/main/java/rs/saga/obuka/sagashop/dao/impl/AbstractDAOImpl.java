@@ -2,6 +2,7 @@ package rs.saga.obuka.sagashop.dao.impl;
 
 import org.springframework.transaction.annotation.Transactional;
 import rs.saga.obuka.sagashop.dao.AbstractDAO;
+import rs.saga.obuka.sagashop.exception.DAOException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,7 +10,6 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
-import rs.saga.obuka.sagashop.exception.DAOException;
 
 /**
  * @author: Ana Dedović
@@ -54,16 +54,16 @@ public abstract class AbstractDAOImpl<T, PK extends Serializable> implements Abs
             entityManager.persist(entity);
             persistentEntity = entity;
             return persistentEntity;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
     @Override
     public T merge(T entity) throws DAOException {
-        try{
+        try {
             return entityManager.merge(entity);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DAOException(e);
         }
 
@@ -71,21 +71,21 @@ public abstract class AbstractDAOImpl<T, PK extends Serializable> implements Abs
 
     @Override
     public void delete(T entity) throws DAOException {
-        try{
+        try {
             entityManager.remove(entity);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
     @Override
     public void deleteById(PK entityId) throws DAOException {
-        try{
+        try {
             T entity = findOne(entityId);
             if (entityId != null) {
                 entityManager.remove(entity);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DAOException(e);
         }
     }
