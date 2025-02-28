@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import rs.saga.obuka.sagashop.exception.ServiceException;
-import rs.saga.obuka.sagashop.service.CategoryService;
-import rs.saga.obuka.sagashop.service.PayPalAccountService;
-import rs.saga.obuka.sagashop.service.ProductService;
-import rs.saga.obuka.sagashop.service.UserService;
+import rs.saga.obuka.sagashop.service.*;
 
 /**
  * @author: Ana Dedović
@@ -31,36 +28,46 @@ public abstract class AbstractIntegrationTest {
   @Autowired
   private PayPalAccountService payPalAccountService;
 
+  @Autowired
+  private ShoppingCartService shoppingCartService;
+
   @AfterEach
-  public void tearDown(){
-    categoryService.findAll().forEach(e -> {
+  public void tearDown() {
+
+    try {
+      shoppingCartService.deleteAll();
+    } catch (ServiceException e) {
+      e.printStackTrace();
+    }
+
+    payPalAccountService.findAll().forEach(e -> {
       try {
-        categoryService.delete(e.getId());
+        payPalAccountService.delete(e.getId());
       } catch (ServiceException serviceException) {
         serviceException.printStackTrace();
       }
     });
-    productService.findAll().forEach(e -> {
-      try {
-        productService.delete(e.getId());
-      }
-      catch (ServiceException serviceException) {
-        serviceException.printStackTrace();
-      }
-    });
+
     userService.findAll().forEach(e -> {
       try {
         userService.delete(e.getId());
-      }
-      catch (ServiceException serviceException) {
+      } catch (ServiceException serviceException) {
         serviceException.printStackTrace();
       }
     });
-    payPalAccountService.findAll().forEach(e -> {
+
+    productService.findAll().forEach(e -> {
       try {
-        payPalAccountService.delete(e.getId());
+        productService.delete(e.getId());
+      } catch (ServiceException serviceException) {
+        serviceException.printStackTrace();
       }
-      catch (ServiceException serviceException) {
+    });
+
+    categoryService.findAll().forEach(e -> {
+      try {
+        categoryService.delete(e.getId());
+      } catch (ServiceException serviceException) {
         serviceException.printStackTrace();
       }
     });

@@ -26,17 +26,22 @@ public class UserRest {
     }
 
     @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public User save(@RequestBody @Valid CreateUserCmd cmd ) throws ServiceException {
         return userService.save(cmd);
     }
 
     @GetMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<UserResult> findAll() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public UserInfo findById( @PathVariable Long id ) throws ServiceException {
         return userService.findById(id);
     }

@@ -26,17 +26,22 @@ public class ProductRest {
     }
 
     @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public Product save(@RequestBody @Valid CreateProductCmd cmd ) throws ServiceException {
         return productService.save(cmd);
     }
 
     @GetMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<ProductResult> findAll() {
         return productService.findAll();
     }
 
     @GetMapping("/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public ProductInfo findById(@PathVariable Long id ) throws ServiceException {
         return productService.findById(id);
     }
@@ -51,6 +56,27 @@ public class ProductRest {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) throws ServiceException {
         productService.delete(id);
+    }
+
+    @GetMapping(value = "/name/{name}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResult> findByName(@PathVariable String name) {
+        return productService.findByName(name);
+    }
+
+    @GetMapping(value = "/price/{price}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResult> findByPrice(@PathVariable Double price) {
+        return productService.findByPrice(price);
+    }
+
+    @GetMapping(value = "/category/{category}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResult> findByCategory(@PathVariable String categoryName) {
+        return productService.findByCategory(categoryName);
     }
 
 }

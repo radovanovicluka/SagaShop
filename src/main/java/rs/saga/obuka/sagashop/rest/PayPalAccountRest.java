@@ -26,17 +26,22 @@ public class PayPalAccountRest {
     }
 
     @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public PayPalAccount save(@RequestBody @Valid CreatePayPalAccountCmd cmd ) throws ServiceException {
         return payPalAccountService.save(cmd);
     }
 
     @GetMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<PayPalAccountResult> findAll() {
         return payPalAccountService.findAll();
     }
 
     @GetMapping("/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public PayPalAccountInfo findById(@PathVariable Long id ) throws ServiceException {
         return payPalAccountService.findById(id);
     }

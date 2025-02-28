@@ -1,6 +1,7 @@
 package rs.saga.obuka.sagashop.rest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.saga.obuka.sagashop.domain.Category;
 import rs.saga.obuka.sagashop.dto.category.CategoryInfo;
@@ -28,12 +29,15 @@ public class CategoryRest {
     }
 
     @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public Category save(@RequestBody @Valid CreateCategoryCmd cmd) throws ServiceException {
         return categoryService.save(cmd);
     }
 
     @GetMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<CategoryResult> findAll() {
         return categoryService.findAll();
     }

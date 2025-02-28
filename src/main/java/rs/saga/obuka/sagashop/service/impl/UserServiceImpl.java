@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
              user = userDAO.findOne(cmd.getId());
 
              if (user == null) {
-                 throw new ServiceException(ErrorCode.ERR_GEN_002);
+                 throw new ServiceException(ErrorCode.ERR_GEN_002, "User not found! ID = " + cmd.getId());
              }
 
              UserMapper.INSTANCE.updateUserCmdToUser(user, cmd);
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         else {
-            throw new ServiceException(ErrorCode.ERR_GEN_001, "User does not exist!");
+            throw new ServiceException(ErrorCode.ERR_GEN_002, "User does not exist!");
         }
     }
 }

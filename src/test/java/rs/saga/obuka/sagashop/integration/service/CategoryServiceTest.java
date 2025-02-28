@@ -31,22 +31,22 @@ public class CategoryServiceTest extends AbstractIntegrationTest {
 
     @Test
     public void saveCategory() throws ServiceException {
-        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB");
+        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB", null, null);
         Category category = categoryService.save(cmd);
         assertNotNull(category.getId());
         assertEquals(cmd.getDescription(), category.getDescription());
-        assertEquals(cmd.getName(), category.getName());
+        assertEquals(cmd.getName(), category.getCategoryName());
     }
 
     @Test
     public void updateCategory() throws ServiceException {
         //cuvamo kategoriju
-        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB");
+        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB", null, null);
         Category category = categoryService.save(cmd);
         assertNotNull(category.getId());
 
         //menjamo kategoriju
-        UpdateCategoryCmd updateCategoryCmd = new UpdateCategoryCmd(category.getId(),  category.getName(), category.getDescription());
+        UpdateCategoryCmd updateCategoryCmd = new UpdateCategoryCmd(category.getId(),  category.getCategoryName(), category.getDescription(), null, null);
         updateCategoryCmd.setName("promenjena kategorija");
         categoryService.update(updateCategoryCmd);
 
@@ -58,7 +58,7 @@ public class CategoryServiceTest extends AbstractIntegrationTest {
     @Test
     public void deleteCategory() throws ServiceException {
         //kreiramo kategoriju
-        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB");
+        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB", null, null);
         Category category = categoryService.save(cmd);
         assertNotNull(category.getId());
 
@@ -73,7 +73,7 @@ public class CategoryServiceTest extends AbstractIntegrationTest {
     @Test
     public void findOne() throws ServiceException {
         //kreiramo kategoriju
-        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB");
+        CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "Tv, CD, USB", null, null);
         Category category = categoryService.save(cmd);
         assertNotNull(category.getId());
 
@@ -86,11 +86,11 @@ public class CategoryServiceTest extends AbstractIntegrationTest {
     @Test
     public void findAll() throws ServiceException {
         //cuvamo kategoriju 1
-        CreateCategoryCmd cmd1 = new CreateCategoryCmd("Tehnika", "Tv, CD, USB");
+        CreateCategoryCmd cmd1 = new CreateCategoryCmd("Tehnika", "Tv, CD, USB", null, null);
         categoryService.save(cmd1);
 
         //cuvamo kategoriju 2
-        CreateCategoryCmd cmd2 = new CreateCategoryCmd("Hrana", "Smoki, Cips, Grisine");
+        CreateCategoryCmd cmd2 = new CreateCategoryCmd("Hrana", "Smoki, Cips, Grisine", null, null);
         categoryService.save(cmd2);
 
         //proveravamo listu kategorija

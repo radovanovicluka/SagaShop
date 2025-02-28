@@ -38,7 +38,7 @@ public class PayPalAccountServiceImpl implements PayPalAccountService {
         PayPalAccount payPalAccount = PayPalAccountMapper.INSTANCE.createPayPalAccountCmdToPayPalAccount(cmd);
 
         User user = userDAO.findOne(cmd.getUserId());
-        if (user == null) { throw new ServiceException(ErrorCode.ERR_GEN_001, "User does not exist"); }
+        if (user == null) { throw new ServiceException(ErrorCode.ERR_GEN_002, "User does not exist"); }
         payPalAccount.setUser(user);
 
         try {
@@ -71,7 +71,7 @@ public class PayPalAccountServiceImpl implements PayPalAccountService {
             payPalAccount = payPalAccountDAO.findOne(cmd.getId());
 
             if ( payPalAccount == null ) {
-                throw new ServiceException(ErrorCode.ERR_GEN_002);
+                throw new ServiceException(ErrorCode.ERR_GEN_002, "PayPal Account does not exist");
             }
 
             PayPalAccountMapper.INSTANCE.updatePayPalAccountCmdToPayPalAccount(payPalAccount, cmd);
@@ -79,7 +79,7 @@ public class PayPalAccountServiceImpl implements PayPalAccountService {
         }
         catch (DAOException e) {
             LOGGER.error(e.getMessage());
-            throw new ServiceException(ErrorCode.ERR_GEN_001, "Update of PayPal Account failed!", e);
+            throw new ServiceException(ErrorCode.ERR_GEN_005, "Update of PayPal Account failed!", e);
         }
 
     }
@@ -94,11 +94,11 @@ public class PayPalAccountServiceImpl implements PayPalAccountService {
             }
             catch (DAOException e) {
                 LOGGER.error(e.getMessage());
-                throw new ServiceException(ErrorCode.ERR_GEN_001, "Deleting of PayPal Account failed!", e);
+                throw new ServiceException(ErrorCode.ERR_GEN_003, "Deleting of PayPal Account failed!", e);
             }
         }
         else {
-            throw new ServiceException(ErrorCode.ERR_GEN_001, "PayPal Account does not exist!");
+            throw new ServiceException(ErrorCode.ERR_GEN_002, "PayPal Account does not exist!");
         }
 
     }

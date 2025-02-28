@@ -10,13 +10,13 @@ public class CategoryBuilder {
 
     public static Category categoryBelaTehnika() {
         return Category.builder()
-                .name("Bela tehnika").description("Bela tehnika - sve na jednom mestu")
+                .categoryName("Bela tehnika").description("Bela tehnika - sve na jednom mestu")
                 .build();
     }
 
     public static Category categoryRacunari() {
         return Category.builder()
-                .name("Računari i komponente").description("Računari i komponente - sve na jednom mestu")
+                .categoryName("Računari i komponente").description("Računari i komponente - sve na jednom mestu")
                 .build();
     }
 

@@ -1,4 +1,4 @@
-package rs.saga.obuka.sagashop.unit;
+package rs.saga.obuka.sagashop.unit.rest;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -6,19 +6,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import rs.saga.obuka.sagashop.AbstractUnitRestTest;
-import rs.saga.obuka.sagashop.builder.ProductBuilder;
-import rs.saga.obuka.sagashop.domain.Product;
-import rs.saga.obuka.sagashop.dto.category.CategoryInfo;
-import rs.saga.obuka.sagashop.dto.category.CategoryResult;
-import rs.saga.obuka.sagashop.dto.category.UpdateCategoryCmd;
-import rs.saga.obuka.sagashop.dto.product.CreateProductCmd;
-import rs.saga.obuka.sagashop.dto.product.ProductInfo;
-import rs.saga.obuka.sagashop.dto.product.ProductResult;
-import rs.saga.obuka.sagashop.dto.product.UpdateProductCmd;
-import rs.saga.obuka.sagashop.rest.ProductRest;
-import rs.saga.obuka.sagashop.service.ProductService;
+import rs.saga.obuka.sagashop.builder.UserBuilder;
+import rs.saga.obuka.sagashop.domain.User;
+import rs.saga.obuka.sagashop.dto.user.CreateUserCmd;
+import rs.saga.obuka.sagashop.dto.user.UpdateUserCmd;
+import rs.saga.obuka.sagashop.dto.user.UserInfo;
+import rs.saga.obuka.sagashop.dto.user.UserResult;
+import rs.saga.obuka.sagashop.rest.UserRest;
+import rs.saga.obuka.sagashop.service.UserService;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,43 +22,43 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @Tag("REST")
-@WebMvcTest(controllers = ProductRest.class)
-public class ProductRestTest extends AbstractUnitRestTest {
+@WebMvcTest(controllers = UserRest.class)
+public class UserRestTest extends AbstractUnitRestTest {
 
     @MockBean
-    private ProductService productService;
+    private UserService userService;
 
     @Test
-    public void saveProduct() throws Exception {
-        CreateProductCmd cmd = new CreateProductCmd(new BigDecimal(50), "Mis - Logitech", "Laserski mis", 10);
+    public void saveUser() throws Exception {
+        CreateUserCmd cmd = new CreateUserCmd();
         String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);
-        Product product = ProductBuilder.misProduct();
+        User user = UserBuilder.userLuka();
 
-        doReturn(product).when(productService).save(any(CreateProductCmd.class));
+        doReturn(user).when(userService).save(any(CreateUserCmd.class));
 
-        mockMvc.perform(post("/product/save")
+        mockMvc.perform(post("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInString)).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(product.getName()));
+                .andExpect(jsonPath("$.name").value(user.getName()));
     }
 
     @Test
     public void findAll() throws Exception {
-        List<ProductResult> results = new ArrayList<>();
-        results.add(new ProductResult(1L, new BigDecimal(30) ,"Product1", "Desc 1", 5, new ArrayList<CategoryResult>()));
-        results.add(new ProductResult(2L, new BigDecimal(50), "Product2", "Desc 2", 10, new ArrayList<CategoryResult>()));
+        List<UserResult> results = new ArrayList<>();
+        results.add(new UserResult(1L, "User1", "Name 1", "Surname 1"));
+        results.add(new UserResult(2L, "User2", "Name 2", "Surname 2"));
 
-        doReturn(results).when(productService).findAll();
+        doReturn(results).when(userService).findAll();
 
-        String path = "/product/all";
+        String path = "/user";
         mockMvc.perform(get(path))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -80,11 +76,11 @@ public class ProductRestTest extends AbstractUnitRestTest {
 
     @Test
     public void findById() throws Exception {
-        ProductInfo info = new ProductInfo(1L, new BigDecimal(100), "Product", "Desc", 10, new ArrayList<CategoryInfo>());
+        UserInfo info = new UserInfo(1L, "username", "name", "surname");
 
-        doReturn(info).when(productService).findById(anyLong());
+        doReturn(info).when(userService).findById(anyLong());
 
-        String path = "/product/id/1";
+        String path = "/user/1";
 
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -96,13 +92,13 @@ public class ProductRestTest extends AbstractUnitRestTest {
     }
 
     @Test
-    public void updateCategory() throws Exception {
-        UpdateProductCmd cmd = new UpdateProductCmd(1L, new BigDecimal(20), "Updated name", "Updated description", 15, new ArrayList<UpdateCategoryCmd>());
+    public void updateUser() throws Exception {
+        UpdateUserCmd cmd = new UpdateUserCmd(1L, "Updated username", "Updated password", "Updated name", "Updated surname");
         String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);
 
-        doNothing().when(productService).update(any(UpdateProductCmd.class));
+        doNothing().when(userService).update(any(UpdateUserCmd.class));
 
-        mockMvc.perform(put("/product/update")
+        mockMvc.perform(put("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInString))
                 .andDo(print())
@@ -110,12 +106,13 @@ public class ProductRestTest extends AbstractUnitRestTest {
     }
 
     @Test
-    public void deleteCategory() throws Exception {
-        doNothing().when(productService).delete(anyLong());
+    public void deleteUser() throws Exception {
+        doNothing().when(userService).delete(anyLong());
 
-        mockMvc.perform(delete("/product/delete/1")
+        mockMvc.perform(delete("/user/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
+
 }

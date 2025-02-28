@@ -1,4 +1,4 @@
-package rs.saga.obuka.sagashop.unit;
+package rs.saga.obuka.sagashop.unit.rest;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -6,18 +6,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import rs.saga.obuka.sagashop.AbstractUnitRestTest;
-import rs.saga.obuka.sagashop.builder.UserBuilder;
-import rs.saga.obuka.sagashop.domain.User;
+import rs.saga.obuka.sagashop.builder.PayPalAccountBuilder;
+import rs.saga.obuka.sagashop.domain.Address;
+import rs.saga.obuka.sagashop.domain.PayPalAccount;
+import rs.saga.obuka.sagashop.dto.paypalaccount.CreatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountInfo;
 import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountResult;
 import rs.saga.obuka.sagashop.dto.paypalaccount.UpdatePayPalAccountCmd;
-import rs.saga.obuka.sagashop.dto.user.CreateUserCmd;
-import rs.saga.obuka.sagashop.dto.user.UpdateUserCmd;
-import rs.saga.obuka.sagashop.dto.user.UserInfo;
-import rs.saga.obuka.sagashop.dto.user.UserResult;
-import rs.saga.obuka.sagashop.rest.UserRest;
-import rs.saga.obuka.sagashop.service.UserService;
+import rs.saga.obuka.sagashop.rest.PayPalAccountRest;
+import rs.saga.obuka.sagashop.service.PayPalAccountService;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,76 +32,80 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @Tag("REST")
-@WebMvcTest(controllers = UserRest.class)
-public class UserRestTest extends AbstractUnitRestTest {
+@WebMvcTest(controllers = PayPalAccountRest.class)
+public class PayPalAccountRestTest extends AbstractUnitRestTest {
 
     @MockBean
-    private UserService userService;
+    private PayPalAccountService payPalAccountService;
 
     @Test
-    public void saveCategory() throws Exception {
-        CreateUserCmd cmd = new CreateUserCmd();
+    public void savePayPalAccount() throws Exception {
+        CreatePayPalAccountCmd cmd = new CreatePayPalAccountCmd();
         String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);
-        User category = UserBuilder.userLuka();
+        PayPalAccount payPalAccount = PayPalAccountBuilder.account1Build();
 
-        doReturn(category).when(userService).save(any(CreateUserCmd.class));
+        doReturn(payPalAccount).when(payPalAccountService).save(any(CreatePayPalAccountCmd.class));
 
-        mockMvc.perform(post("/user/save")
+        mockMvc.perform(post("/paypalaccount")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInString)).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(category.getName()));
+                .andExpect(jsonPath("$.accountNumber").value(payPalAccount.getAccountNumber()));
     }
 
     @Test
     public void findAll() throws Exception {
-        List<UserResult> results = new ArrayList<>();
-        results.add(new UserResult(1L, "User1", "Name 1", "Surname 1"));
-        results.add(new UserResult(2L, "User2", "Name 2", "Surname 2"));
+        List<PayPalAccountResult> results = new ArrayList<>();
+        results.add(new PayPalAccountResult(1L, "89653131684", new BigDecimal(100.12),
+                "SRB", LocalDate.now(), new Address()));
+        results.add(new PayPalAccountResult(2L, "7498751319", new BigDecimal(8946.64),
+                "ENG", LocalDate.now(), new Address()));
 
-        doReturn(results).when(userService).findAll();
+        doReturn(results).when(payPalAccountService).findAll();
 
-        String path = "/user/all";
+        String path = "/paypalaccount";
         mockMvc.perform(get(path))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0]").exists())
                 .andExpect(jsonPath("$.[0].id").isNumber())
                 .andExpect(jsonPath("$.[0].id").value(results.get(0).getId()))
-                .andExpect(jsonPath("$.[0].name").isString())
-                .andExpect(jsonPath("$.[0].name").value(results.get(0).getName()))
+                .andExpect(jsonPath("$.[0].accountNumber").isString())
+                .andExpect(jsonPath("$.[0].accountNumber").value(results.get(0).getAccountNumber()))
                 .andExpect(jsonPath("$.[1]").exists())
                 .andExpect(jsonPath("$.[1].id").isNumber())
                 .andExpect(jsonPath("$.[1].id").value(results.get(1).getId()))
-                .andExpect(jsonPath("$.[1].name").isString())
-                .andExpect(jsonPath("$.[1].name").value(results.get(1).getName()));
+                .andExpect(jsonPath("$.[1].accountNumber").isString())
+                .andExpect(jsonPath("$.[1].accountNumber").value(results.get(1).getAccountNumber()));
     }
 
     @Test
     public void findById() throws Exception {
-        UserInfo info = new UserInfo(1L, "username", "name", "surname");
+        PayPalAccountInfo info = new PayPalAccountInfo(1L, "89653131684", new BigDecimal(100.12),
+                "SRB", LocalDate.now(), new Address());
 
-        doReturn(info).when(userService).findById(anyLong());
+        doReturn(info).when(payPalAccountService).findById(anyLong());
 
-        String path = "/user/id/1";
+        String path = "/paypalaccount/1";
 
         mockMvc.perform(get(path))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.id").value(info.getId()))
-                .andExpect(jsonPath("$.name").isString())
-                .andExpect(jsonPath("$.name").value(info.getName()));
+                .andExpect(jsonPath("$.accountNumber").isString())
+                .andExpect(jsonPath("$.accountNumber").value(info.getAccountNumber()));
     }
 
     @Test
-    public void updateUser() throws Exception {
-        UpdateUserCmd cmd = new UpdateUserCmd(1L, "Updated username", "Updated password", "Updated name", "Updated surname");
+    public void updateCategory() throws Exception {
+        UpdatePayPalAccountCmd cmd = new UpdatePayPalAccountCmd(1L, "89653131684",
+                new BigDecimal(100.12), "SRB", LocalDate.now(), new Address());
         String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);
 
-        doNothing().when(userService).update(any(UpdateUserCmd.class));
+        doNothing().when(payPalAccountService).update(any(UpdatePayPalAccountCmd.class));
 
-        mockMvc.perform(put("/user/update")
+        mockMvc.perform(put("/paypalaccount")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInString))
                 .andDo(print())
@@ -109,10 +113,10 @@ public class UserRestTest extends AbstractUnitRestTest {
     }
 
     @Test
-    public void deleteUser() throws Exception {
-        doNothing().when(userService).delete(anyLong());
+    public void deletePayPalAccount() throws Exception {
+        doNothing().when(payPalAccountService).delete(anyLong());
 
-        mockMvc.perform(delete("/user/delete/1")
+        mockMvc.perform(delete("/paypalaccount/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());

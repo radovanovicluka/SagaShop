@@ -6,22 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateProductCmd {
+public class CreateProductFromCategoryCmd {
 
-    private Long id;
     private BigDecimal price;
     private String name;
     private String description;
     private Integer quantity;
-//    Id za dodavanje kategorija
-    private List<Long> addCategoryIds;
-//    Id za uklanjanje kategorija
-    private List<Long> removeCategoryIds;
 
 }
