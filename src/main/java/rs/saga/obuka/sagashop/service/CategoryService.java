@@ -1,10 +1,10 @@
 package rs.saga.obuka.sagashop.service;
 
 import rs.saga.obuka.sagashop.domain.Category;
-import rs.saga.obuka.sagashop.dto.category.UpdateCategoryCmd;
 import rs.saga.obuka.sagashop.dto.category.CategoryInfo;
 import rs.saga.obuka.sagashop.dto.category.CategoryResult;
 import rs.saga.obuka.sagashop.dto.category.CreateCategoryCmd;
+import rs.saga.obuka.sagashop.dto.category.UpdateCategoryCmd;
 import rs.saga.obuka.sagashop.exception.ServiceException;
 
 import java.util.List;

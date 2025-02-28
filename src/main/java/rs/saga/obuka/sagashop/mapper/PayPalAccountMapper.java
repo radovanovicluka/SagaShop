@@ -5,9 +5,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import rs.saga.obuka.sagashop.domain.PayPalAccount;
+import rs.saga.obuka.sagashop.dto.paypalaccount.CreatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountInfo;
 import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountResult;
-import rs.saga.obuka.sagashop.dto.paypalaccount.CreatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.dto.paypalaccount.UpdatePayPalAccountCmd;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 public interface PayPalAccountMapper {
 
     PayPalAccountMapper INSTANCE = Mappers.getMapper(PayPalAccountMapper.class);
-    
+
     @Mapping(target = "id", ignore = true)
     PayPalAccount createPayPalAccountCmdToPayPalAccount(CreatePayPalAccountCmd cmd);
 
@@ -25,5 +25,5 @@ public interface PayPalAccountMapper {
     PayPalAccountInfo payPalAccountToPayPalAccountInfo(PayPalAccount payPalAccount);
 
     void updatePayPalAccountCmdToPayPalAccount(@MappingTarget PayPalAccount payPalAccount, UpdatePayPalAccountCmd cmd);
-    
+
 }

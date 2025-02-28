@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="paypal_account")
+@Table(name = "paypal_account")
 @Getter
 @Setter
 @Builder
@@ -31,12 +31,12 @@ public class PayPalAccount extends BaseEntity<Long> {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="postalCode", column = @Column(name = "postal_code"))
+            @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
     })
     private Address billingAddress;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="userID")
+    @JoinColumn(name = "userID")
     @NotNull
     private User user;
 }
