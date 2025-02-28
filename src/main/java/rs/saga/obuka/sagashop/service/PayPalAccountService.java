@@ -1,9 +1,9 @@
 package rs.saga.obuka.sagashop.service;
 
 import rs.saga.obuka.sagashop.domain.PayPalAccount;
+import rs.saga.obuka.sagashop.dto.paypalaccount.CreatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountInfo;
 import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountResult;
-import rs.saga.obuka.sagashop.dto.paypalaccount.CreatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.dto.paypalaccount.UpdatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.exception.ServiceException;
 

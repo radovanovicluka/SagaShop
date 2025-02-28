@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountInfo;
+import rs.saga.obuka.sagashop.dto.audit.AuditDTO;
 
 @Getter
 @Setter
@@ -16,5 +16,6 @@ public class UserInfo {
     private String username;
     private String name;
     private String surname;
+    private AuditDTO audit = new AuditDTO();
 
 }

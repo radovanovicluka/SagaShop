@@ -7,4 +7,7 @@ import rs.saga.obuka.sagashop.domain.Category;
  * Date: 25.06.2021.
  **/
 public interface CategoryDAO extends AbstractDAO<Category, Long> {
+
+    boolean isCategoryUnique(String name);
+
 }

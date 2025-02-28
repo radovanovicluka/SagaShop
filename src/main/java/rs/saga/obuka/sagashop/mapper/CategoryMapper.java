@@ -1,14 +1,12 @@
 package rs.saga.obuka.sagashop.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import rs.saga.obuka.sagashop.domain.Category;
-import rs.saga.obuka.sagashop.dto.category.CategoryInfo;
-import rs.saga.obuka.sagashop.dto.category.CategoryResult;
-import rs.saga.obuka.sagashop.dto.category.CreateCategoryCmd;
-import rs.saga.obuka.sagashop.dto.category.UpdateCategoryCmd;
+import rs.saga.obuka.sagashop.dto.category.*;
 
 import java.util.List;
 
@@ -24,9 +22,18 @@ public interface CategoryMapper {
     @Mapping(target = "id", ignore = true)
     Category createCategoryCmdToCategory(CreateCategoryCmd cmd);
 
+    @Mapping(target = "id", ignore = true)
+    Category createCategoryFromProductCmdToCategory(CreateCategoryFromProductCmd cmd);
+
     List<CategoryResult> listCategoryToListCategoryResult(List<Category> categories);
 
     CategoryInfo categoryToCategoryInfo(Category category);
 
     void updateCategoryCmdToCategory(@MappingTarget Category category, UpdateCategoryCmd cmd);
+
+    @AfterMapping
+    default void afterMappingDTO(Category category, @MappingTarget CategoryInfo categoryInfo){
+        AuditMapper.INSTANCE.fillAudit(category, categoryInfo.getAudit());
+    }
+
 }

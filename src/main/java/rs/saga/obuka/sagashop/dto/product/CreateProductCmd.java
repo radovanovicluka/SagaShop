@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs.saga.obuka.sagashop.dto.category.CreateCategoryCmd;
+import rs.saga.obuka.sagashop.dto.category.CreateCategoryFromProductCmd;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,6 +20,9 @@ public class CreateProductCmd implements Serializable {
     private String name;
     private String description;
     private Integer quantity;
-//    private List<CreateCategoryCmd> categories;
+    //    Nove kategorje
+    private List<CreateCategoryFromProductCmd> categories;
+    //    Vec postojece kategorije
+    private List<Long> categoryIds;
 
 }

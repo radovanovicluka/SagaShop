@@ -7,6 +7,7 @@ public class UserBuilder {
 
     public static User userLuka() {
         return User.builder()
+                .username("lukar")
                 .name("Luka")
                 .surname("Radovanovic")
                 .password("sifra")
