@@ -1,0 +1,1 @@
+create schema saga_shop_init;

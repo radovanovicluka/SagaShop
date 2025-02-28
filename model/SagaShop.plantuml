@@ -1,0 +1,75 @@
+@startuml SagaShop
+
+center footer Model SagaShop
+
+class Category
+{
+    ID : Long NotNull PK
+	name : String NotNull
+    description : String Null
+}
+
+class Product
+{
+    ID : Long NotNull PK
+	price : BigDecimal NotNull
+	name : String NotNull
+    description : String Null
+    quantity : Integer NotNull
+}
+
+class CategoryProduct
+{
+    productID : Long NotNull PK FK
+    categoryID : Long NotNull PK FK
+}
+
+class User
+{
+    ID : Long NotNull PK
+	username : String NotNull
+	name : String NotNull
+	surname : String NotNull
+    password : String NotNull
+}
+
+class PayPalAccount
+{
+    ID : Long NotNull PK
+	accountNumber : String NotNull
+	budget : BigDecimal NotNull
+	language : String NotNull
+    expiresOn : LocalDate NotNull
+	city : String Null
+	country : String Null
+	postal_code : String Null
+	street : String Null
+	userID : Long NotNull FK
+}
+
+class ShoppingCart
+{
+    ID : Long NotNull PK
+	name : String NotNull
+	status : Status NotNull
+	price : BigDecimal NotNull
+	userID : Long NotNull FK
+}
+
+class Item
+{
+    ID : Long NotNull PK
+	quantity : Integer NotNull
+    productID : Long NotNull FK
+    shoppingCartID : Long NotNull FK
+}
+
+CategoryProduct "0..*" -up- "1" Category
+CategoryProduct "0..*" -up- "1" Product
+
+Item "0..*" -up- "1" ShoppingCart
+Item "0..*" -up- "1" Product
+ShoppingCart "0..*" -up- "1" User
+PayPalAccount "0..*" -up- "1" User
+
+@enduml
