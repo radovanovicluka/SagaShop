@@ -29,9 +29,9 @@ public class Product extends BaseEntity<Long> {
     @NotNull
     private Integer quantity;
 
-    @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.MERGE )
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name="category_product",
+            name = "category_product",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )

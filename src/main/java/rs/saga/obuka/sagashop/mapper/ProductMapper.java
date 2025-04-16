@@ -5,10 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import rs.saga.obuka.sagashop.domain.Product;
-import rs.saga.obuka.sagashop.dto.product.CreateProductCmd;
-import rs.saga.obuka.sagashop.dto.product.ProductInfo;
-import rs.saga.obuka.sagashop.dto.product.ProductResult;
-import rs.saga.obuka.sagashop.dto.product.UpdateProductCmd;
+import rs.saga.obuka.sagashop.dto.product.*;
 
 import java.util.List;
 
@@ -19,6 +16,9 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     Product createProductCmdToProduct(CreateProductCmd cmd);
+
+    @Mapping(target = "id", ignore = true)
+    Product createProductFromCategoryCmdToProduct(CreateProductFromCategoryCmd cmd);
 
     List<ProductResult> listProductToListProductResult(List<Product> categories);
 

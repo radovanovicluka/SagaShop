@@ -25,24 +25,24 @@ public class UserServiceTest extends AbstractIntegrationTest {
     @Test
     public void saveUser() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
-        assertEquals("lukar", user.getUsername());
+        assertEquals("radovan", user.getUsername());
 
     }
 
     @Test
     public void updateUser() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
 
-        UpdateUserCmd update = new UpdateUserCmd( user.getId(), user.getUsername(), user.getPassword(), user.getName(),
-                    user.getSurname());
+        UpdateUserCmd update = new UpdateUserCmd(user.getId(), user.getUsername(), user.getPassword(), user.getName(),
+                user.getSurname());
         update.setName("Uros");
         userService.update(update);
 
@@ -54,7 +54,7 @@ public class UserServiceTest extends AbstractIntegrationTest {
     @Test
     public void deleteUser() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
@@ -68,7 +68,7 @@ public class UserServiceTest extends AbstractIntegrationTest {
     @Test
     public void findOne() throws ServiceException {
 
-        CreateUserCmd cmd = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user = userService.save(cmd);
         assertNotNull(user);
         assertNotNull(user.getId());
@@ -76,25 +76,25 @@ public class UserServiceTest extends AbstractIntegrationTest {
         UserInfo info = userService.findById(user.getId());
         assertNotNull(info);
         assertEquals(user.getId(), info.getId());
-        assertEquals("lukar", info.getUsername());
+        assertEquals("radovan", info.getUsername());
         assertEquals("Luka", info.getName());
     }
 
     @Test
     public void findAll() throws ServiceException {
 
-        CreateUserCmd cmd1 = new CreateUserCmd( "lukar", "password","Luka", "R" );
+        CreateUserCmd cmd1 = new CreateUserCmd("radovan", "password", "Luka", "R");
         User user1 = userService.save(cmd1);
         assertNotNull(user1);
         assertNotNull(user1.getId());
 
-        CreateUserCmd cmd2 = new CreateUserCmd( "urosr", "password","Uros", "R" );
+        CreateUserCmd cmd2 = new CreateUserCmd("urosr", "password", "Uros", "R");
         User user2 = userService.save(cmd2);
         assertNotNull(user2);
         assertNotNull(user2.getId());
 
         List<UserResult> results = userService.findAll();
-        assertEquals(2, results.size());
+        assertEquals(4, results.size());
         assertTrue(results.stream().anyMatch(e -> e.getName().equals("Uros")));
         assertTrue(results.stream().anyMatch(e -> e.getName().equals("Luka")));
     }

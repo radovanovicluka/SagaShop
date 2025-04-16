@@ -1,16 +1,14 @@
-package rs.saga.obuka.sagashop.unit;
+package rs.saga.obuka.sagashop.unit.rest;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import rs.saga.obuka.sagashop.AbstractUnitRestTest;
 import rs.saga.obuka.sagashop.builder.UserBuilder;
 import rs.saga.obuka.sagashop.domain.User;
-import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountInfo;
-import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountResult;
-import rs.saga.obuka.sagashop.dto.paypalaccount.UpdatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.dto.user.CreateUserCmd;
 import rs.saga.obuka.sagashop.dto.user.UpdateUserCmd;
 import rs.saga.obuka.sagashop.dto.user.UserInfo;
@@ -25,11 +23,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @Tag("REST")
 @WebMvcTest(controllers = UserRest.class)
@@ -39,21 +36,23 @@ public class UserRestTest extends AbstractUnitRestTest {
     private UserService userService;
 
     @Test
-    public void saveCategory() throws Exception {
+    @WithMockUser(username = "user", password = "user", authorities = "ADMIN")
+    public void saveUser() throws Exception {
         CreateUserCmd cmd = new CreateUserCmd();
         String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);
-        User category = UserBuilder.userLuka();
+        User user = UserBuilder.userLuka();
 
-        doReturn(category).when(userService).save(any(CreateUserCmd.class));
+        doReturn(user).when(userService).save(any(CreateUserCmd.class));
 
-        mockMvc.perform(post("/user/save")
+        mockMvc.perform(post("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInString)).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(category.getName()));
+                .andExpect(jsonPath("$.name").value(user.getName()));
     }
 
     @Test
+    @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findAll() throws Exception {
         List<UserResult> results = new ArrayList<>();
         results.add(new UserResult(1L, "User1", "Name 1", "Surname 1"));
@@ -61,7 +60,7 @@ public class UserRestTest extends AbstractUnitRestTest {
 
         doReturn(results).when(userService).findAll();
 
-        String path = "/user/all";
+        String path = "/user";
         mockMvc.perform(get(path))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -78,12 +77,13 @@ public class UserRestTest extends AbstractUnitRestTest {
     }
 
     @Test
+    @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findById() throws Exception {
         UserInfo info = new UserInfo(1L, "username", "name", "surname");
 
         doReturn(info).when(userService).findById(anyLong());
 
-        String path = "/user/id/1";
+        String path = "/user/1";
 
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -95,13 +95,14 @@ public class UserRestTest extends AbstractUnitRestTest {
     }
 
     @Test
+    @WithMockUser(username = "user", password = "user", authorities = "ADMIN")
     public void updateUser() throws Exception {
         UpdateUserCmd cmd = new UpdateUserCmd(1L, "Updated username", "Updated password", "Updated name", "Updated surname");
         String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);
 
         doNothing().when(userService).update(any(UpdateUserCmd.class));
 
-        mockMvc.perform(put("/user/update")
+        mockMvc.perform(put("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInString))
                 .andDo(print())
@@ -109,10 +110,11 @@ public class UserRestTest extends AbstractUnitRestTest {
     }
 
     @Test
+    @WithMockUser(username = "user", password = "user", authorities = "ADMIN")
     public void deleteUser() throws Exception {
         doNothing().when(userService).delete(anyLong());
 
-        mockMvc.perform(delete("/user/delete/1")
+        mockMvc.perform(delete("/user/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());

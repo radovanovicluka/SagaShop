@@ -1,7 +1,8 @@
 package rs.saga.obuka.sagashop.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.saga.obuka.sagashop.domain.PayPalAccount;
 import rs.saga.obuka.sagashop.dto.paypalaccount.CreatePayPalAccountCmd;
@@ -15,38 +16,44 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/paypalaccount")
 public class PayPalAccountRest {
 
     private final PayPalAccountService payPalAccountService;
 
-    @Autowired
-    public PayPalAccountRest(PayPalAccountService payPalAccountService) {
-        this.payPalAccountService = payPalAccountService;
-    }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public PayPalAccount save(@RequestBody @Valid CreatePayPalAccountCmd cmd ) throws ServiceException {
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public PayPalAccount save(@RequestBody @Valid CreatePayPalAccountCmd cmd) throws ServiceException {
         return payPalAccountService.save(cmd);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<PayPalAccountResult> findAll() {
         return payPalAccountService.findAll();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public PayPalAccountInfo findById(@PathVariable Long id ) throws ServiceException {
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public PayPalAccountInfo findById(@PathVariable Long id) throws ServiceException {
         return payPalAccountService.findById(id);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody @Valid UpdatePayPalAccountCmd cmd) throws ServiceException {
         payPalAccountService.update(cmd);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) throws ServiceException {

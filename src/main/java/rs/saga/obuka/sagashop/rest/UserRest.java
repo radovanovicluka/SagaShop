@@ -1,7 +1,8 @@
 package rs.saga.obuka.sagashop.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.saga.obuka.sagashop.domain.User;
 import rs.saga.obuka.sagashop.dto.user.CreateUserCmd;
@@ -15,38 +16,44 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserRest {
 
     private final UserService userService;
 
-    @Autowired
-    public UserRest(UserService userService) {
-        this.userService = userService;
-    }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public User save(@RequestBody @Valid CreateUserCmd cmd ) throws ServiceException {
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public User save(@RequestBody @Valid CreateUserCmd cmd) throws ServiceException {
         return userService.save(cmd);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<UserResult> findAll() {
         return userService.findAll();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public UserInfo findById( @PathVariable Long id ) throws ServiceException {
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfo findById(@PathVariable Long id) throws ServiceException {
         return userService.findById(id);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody @Valid UpdateUserCmd cmd) throws ServiceException {
         userService.update(cmd);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) throws ServiceException {

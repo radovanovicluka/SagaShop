@@ -13,13 +13,15 @@ public enum ErrorCode {
     ERR_GEN_003(5003, "error.deleteFailed"),
     ERR_GEN_004(5004, "error.staleData"),
 
+    //    TODO: Create custom error code
+    ERR_GEN_005(5005, "error.genericError"),
+
     // category 4201 - 4300
     ERR_CAT_001(4201, "error.categoryDoesNotExist"),
     ERR_CAT_002(4202, "error.categoryNameExists");
 
 
-
-    ErrorCode(int responseCode, String messageKey){
+    ErrorCode(int responseCode, String messageKey) {
         this.responseCode = responseCode;
         this.messageKey = messageKey;
     }

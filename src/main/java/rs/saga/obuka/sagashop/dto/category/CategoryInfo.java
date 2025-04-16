@@ -16,7 +16,7 @@ import lombok.Setter;
 public class CategoryInfo {
 
     private Long id;
-    private String name;
+    private String categoryName;
     private String description;
 
 }
