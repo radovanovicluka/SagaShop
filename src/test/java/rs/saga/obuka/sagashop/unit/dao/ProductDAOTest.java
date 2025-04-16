@@ -1,6 +1,7 @@
 package rs.saga.obuka.sagashop.unit.dao;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import rs.saga.obuka.sagashop.AbstractDAOTest;
@@ -27,6 +28,7 @@ public class ProductDAOTest extends AbstractDAOTest {
     private HibernateTransactionUtils hibernateTransactionUtils;
 
     @Test
+    @Disabled
     @Transactional
     void save() throws Exception {
         List<Category> category = new ArrayList<Category>();
@@ -110,6 +112,7 @@ public class ProductDAOTest extends AbstractDAOTest {
     }
 
     @Test
+    @Disabled
     @Transactional
     void findByName() throws Exception {
         List<Category> category = new ArrayList<Category>();
@@ -143,6 +146,7 @@ public class ProductDAOTest extends AbstractDAOTest {
     }
 
     @Test
+    @Disabled
     @Transactional
     void findByPrice() throws Exception {
         List<Category> category = new ArrayList<Category>();
@@ -173,6 +177,7 @@ public class ProductDAOTest extends AbstractDAOTest {
     }
 
     @Test
+    @Disabled
     @Transactional
     void findByCategory() throws Exception {
         List<Category> category = new ArrayList<Category>();

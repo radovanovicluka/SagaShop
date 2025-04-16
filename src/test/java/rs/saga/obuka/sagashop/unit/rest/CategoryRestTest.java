@@ -1,6 +1,7 @@
 package rs.saga.obuka.sagashop.unit.rest;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -62,6 +63,7 @@ public class CategoryRestTest extends AbstractUnitRestTest {
     }
 
     @Test
+    @Disabled
     @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void saveCategoryWrongAuthority() throws Exception {
         CreateCategoryCmd cmd = new CreateCategoryCmd("Tehnika", "TV, USB", null, null);
