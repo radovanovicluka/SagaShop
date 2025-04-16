@@ -8,6 +8,8 @@ import rs.saga.obuka.sagashop.dto.audit.AuditDTO;
 
 import java.io.Serializable;
 
+import java.io.Serializable;
+
 /**
  * @author: Ana Dedović
  * Date: 28.06.2021.
