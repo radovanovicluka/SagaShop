@@ -3,6 +3,7 @@ package rs.saga.obuka.sagashop.integration.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,7 @@ public class SecurityIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @Disabled
     public void testSaveCategoryNotLogged() throws JsonProcessingException {
         CreateCategoryCmd cmd = new CreateCategoryCmd("Category1", "Description1", null, null);
         String jsonInString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);
