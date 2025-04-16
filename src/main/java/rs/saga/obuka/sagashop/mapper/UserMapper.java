@@ -1,5 +1,6 @@
 package rs.saga.obuka.sagashop.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -28,4 +29,9 @@ public interface UserMapper {
     UserInfo userToUserInfo(User user);
 
     void updateUserCmdToUser(@MappingTarget User user, UpdateUserCmd cmd);
+
+    @AfterMapping
+    default void afterMappingDTO(User user, @MappingTarget UserInfo userInfo){
+        AuditMapper.INSTANCE.fillAudit(user, userInfo.getAudit());
+    }
 }

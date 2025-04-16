@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.saga.obuka.sagashop.dto.audit.AuditDTO;
+
+import java.io.Serializable;
 
 import java.io.Serializable;
 
@@ -20,4 +23,6 @@ public class CategoryResult implements Serializable {
     private Long id;
     private String categoryName;
     private String description;
+    private AuditDTO audit = new AuditDTO();
+
 }

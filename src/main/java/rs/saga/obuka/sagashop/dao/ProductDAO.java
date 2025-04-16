@@ -12,4 +12,6 @@ public interface ProductDAO extends AbstractDAO<Product, Long> {
 
     public List<Product> findByCategory(String categoryName);
 
+    public List<Product> findByQuantity(int quantity);
+
 }

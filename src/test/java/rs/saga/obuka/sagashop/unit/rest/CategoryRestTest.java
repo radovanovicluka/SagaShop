@@ -12,6 +12,7 @@ import org.springframework.web.util.NestedServletException;
 import rs.saga.obuka.sagashop.AbstractUnitRestTest;
 import rs.saga.obuka.sagashop.builder.CategoryBuilder;
 import rs.saga.obuka.sagashop.domain.Category;
+import rs.saga.obuka.sagashop.dto.audit.AuditDTO;
 import rs.saga.obuka.sagashop.dto.category.CategoryInfo;
 import rs.saga.obuka.sagashop.dto.category.CategoryResult;
 import rs.saga.obuka.sagashop.dto.category.CreateCategoryCmd;
@@ -19,6 +20,8 @@ import rs.saga.obuka.sagashop.dto.category.UpdateCategoryCmd;
 import rs.saga.obuka.sagashop.rest.CategoryRest;
 import rs.saga.obuka.sagashop.service.CategoryService;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +84,8 @@ public class CategoryRestTest extends AbstractUnitRestTest {
     @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findAll() throws Exception {
         List<CategoryResult> results = new ArrayList<>();
-        results.add(new CategoryResult(1L, "Category1", "Desc 1"));
-        results.add(new CategoryResult(2L, "Category2", "Desc 2"));
+        results.add(new CategoryResult(1L, "Category1", "Desc 1", new AuditDTO()));
+        results.add(new CategoryResult(2L, "Category2", "Desc 2", new AuditDTO()));
 
         doReturn(results).when(categoryService).findAll();
 
@@ -105,7 +108,9 @@ public class CategoryRestTest extends AbstractUnitRestTest {
     @Test
     @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findById() throws Exception {
-        CategoryInfo info = new CategoryInfo(1L, "Category", "Desc");
+        CategoryInfo info = new CategoryInfo(1L, "Category", "Desc", new AuditDTO(
+                "default", Date.valueOf(LocalDate.now()), "default", Date.valueOf(LocalDate.now()), 1L
+        ));
 
         doReturn(info).when(categoryService).findById(anyLong());
 
@@ -117,7 +122,11 @@ public class CategoryRestTest extends AbstractUnitRestTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.id").value(info.getId()))
                 .andExpect(jsonPath("$.categoryName").isString())
-                .andExpect(jsonPath("$.categoryName").value(info.getCategoryName()));
+                .andExpect(jsonPath("$.categoryName").value(info.getCategoryName()))
+                .andExpect(jsonPath("$.audit.createdBy").exists())
+                .andExpect(jsonPath("$.audit.lastModifiedBy").exists())
+                .andExpect(jsonPath("$.audit.creationDate").exists())
+                .andExpect(jsonPath("$.audit.lastModifiedDate").exists());
     }
 
     @Test

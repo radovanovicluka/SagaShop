@@ -30,6 +30,10 @@ public class UserServiceTest extends AbstractIntegrationTest {
         assertNotNull(user);
         assertNotNull(user.getId());
         assertEquals("radovan", user.getUsername());
+        assertNotNull(user.getCreationDate());
+        assertNotNull(user.getCreatedBy());
+        assertNotNull(user.getLastModifiedBy());
+        assertNotNull(user.getLastModifiedDate());
 
     }
 
@@ -41,6 +45,12 @@ public class UserServiceTest extends AbstractIntegrationTest {
         assertNotNull(user);
         assertNotNull(user.getId());
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         UpdateUserCmd update = new UpdateUserCmd(user.getId(), user.getUsername(), user.getPassword(), user.getName(),
                 user.getSurname());
         update.setName("Uros");
@@ -49,6 +59,11 @@ public class UserServiceTest extends AbstractIntegrationTest {
         UserInfo info = userService.findById(user.getId());
         assertNotNull(info);
         assertEquals("Uros", info.getName());
+        assertNotNull(info.getAudit().getCreationDate());
+        assertNotNull(info.getAudit().getCreatedBy());
+        assertNotNull(info.getAudit().getLastModifiedBy());
+        assertNotNull(info.getAudit().getLastModifiedDate());
+        assertNotEquals(info.getAudit().getCreationDate(), info.getAudit().getLastModifiedDate());
     }
 
     @Test
@@ -94,7 +109,7 @@ public class UserServiceTest extends AbstractIntegrationTest {
         assertNotNull(user2.getId());
 
         List<UserResult> results = userService.findAll();
-        assertEquals(4, results.size());
+        assertEquals(5, results.size());
         assertTrue(results.stream().anyMatch(e -> e.getName().equals("Uros")));
         assertTrue(results.stream().anyMatch(e -> e.getName().equals("Luka")));
     }

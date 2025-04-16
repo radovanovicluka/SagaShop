@@ -9,6 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import rs.saga.obuka.sagashop.AbstractUnitRestTest;
 import rs.saga.obuka.sagashop.builder.ProductBuilder;
 import rs.saga.obuka.sagashop.domain.Product;
+import rs.saga.obuka.sagashop.dto.audit.AuditDTO;
 import rs.saga.obuka.sagashop.dto.category.CategoryInfo;
 import rs.saga.obuka.sagashop.dto.category.CategoryResult;
 import rs.saga.obuka.sagashop.dto.product.CreateProductCmd;
@@ -19,6 +20,8 @@ import rs.saga.obuka.sagashop.rest.ProductRest;
 import rs.saga.obuka.sagashop.service.ProductService;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,8 +61,10 @@ public class ProductRestTest extends AbstractUnitRestTest {
     @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findAll() throws Exception {
         List<ProductResult> results = new ArrayList<>();
-        results.add(new ProductResult(1L, new BigDecimal(30), "Product1", "Desc 1", 5, new ArrayList<CategoryResult>()));
-        results.add(new ProductResult(2L, new BigDecimal(50), "Product2", "Desc 2", 10, new ArrayList<CategoryResult>()));
+        results.add(new ProductResult(1L, new BigDecimal(30), "Product1", "Desc 1", 5,
+                new ArrayList<CategoryResult>(), new AuditDTO()));
+        results.add(new ProductResult(2L, new BigDecimal(50), "Product2", "Desc 2", 10,
+                new ArrayList<CategoryResult>(), new AuditDTO()));
 
         doReturn(results).when(productService).findAll();
 
@@ -82,7 +87,10 @@ public class ProductRestTest extends AbstractUnitRestTest {
     @Test
     @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findById() throws Exception {
-        ProductInfo info = new ProductInfo(1L, new BigDecimal(100), "Product", "Desc", 10, new ArrayList<CategoryInfo>());
+        ProductInfo info = new ProductInfo(1L, new BigDecimal(100), "Product", "Desc", 10,
+                new ArrayList<CategoryInfo>(), new AuditDTO(
+                "default", Date.valueOf(LocalDate.now()), "default", Date.valueOf(LocalDate.now()), 1L
+        ));
 
         doReturn(info).when(productService).findById(anyLong());
 
@@ -94,7 +102,11 @@ public class ProductRestTest extends AbstractUnitRestTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.id").value(info.getId()))
                 .andExpect(jsonPath("$.name").isString())
-                .andExpect(jsonPath("$.name").value(info.getName()));
+                .andExpect(jsonPath("$.name").value(info.getName()))
+                .andExpect(jsonPath("$.audit.createdBy").exists())
+                .andExpect(jsonPath("$.audit.lastModifiedBy").exists())
+                .andExpect(jsonPath("$.audit.creationDate").exists())
+                .andExpect(jsonPath("$.audit.lastModifiedDate").exists());
     }
 
     @Test

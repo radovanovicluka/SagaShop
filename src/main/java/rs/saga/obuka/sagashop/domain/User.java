@@ -1,6 +1,7 @@
 package rs.saga.obuka.sagashop.domain;
 
 import lombok.*;
+import rs.saga.obuka.sagashop.audit.Audit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseEntity<Long> {
+public class User extends Audit<Long> {
 
     @Column(unique = true, nullable = false)
     @NotNull

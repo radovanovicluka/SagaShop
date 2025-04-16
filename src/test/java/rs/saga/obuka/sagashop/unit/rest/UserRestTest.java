@@ -9,6 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import rs.saga.obuka.sagashop.AbstractUnitRestTest;
 import rs.saga.obuka.sagashop.builder.UserBuilder;
 import rs.saga.obuka.sagashop.domain.User;
+import rs.saga.obuka.sagashop.dto.audit.AuditDTO;
 import rs.saga.obuka.sagashop.dto.user.CreateUserCmd;
 import rs.saga.obuka.sagashop.dto.user.UpdateUserCmd;
 import rs.saga.obuka.sagashop.dto.user.UserInfo;
@@ -16,6 +17,8 @@ import rs.saga.obuka.sagashop.dto.user.UserResult;
 import rs.saga.obuka.sagashop.rest.UserRest;
 import rs.saga.obuka.sagashop.service.UserService;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +58,8 @@ public class UserRestTest extends AbstractUnitRestTest {
     @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findAll() throws Exception {
         List<UserResult> results = new ArrayList<>();
-        results.add(new UserResult(1L, "User1", "Name 1", "Surname 1"));
-        results.add(new UserResult(2L, "User2", "Name 2", "Surname 2"));
+        results.add(new UserResult(1L, "User1", "Name 1", "Surname 1", new AuditDTO()));
+        results.add(new UserResult(2L, "User2", "Name 2", "Surname 2", new AuditDTO()));
 
         doReturn(results).when(userService).findAll();
 
@@ -79,7 +82,9 @@ public class UserRestTest extends AbstractUnitRestTest {
     @Test
     @WithMockUser(username = "user", password = "user", authorities = "USER")
     public void findById() throws Exception {
-        UserInfo info = new UserInfo(1L, "username", "name", "surname");
+        UserInfo info = new UserInfo(1L, "username", "name", "surname", new AuditDTO(
+                "default", Date.valueOf(LocalDate.now()), "default", Date.valueOf(LocalDate.now()), 1L
+        ));
 
         doReturn(info).when(userService).findById(anyLong());
 
@@ -91,7 +96,11 @@ public class UserRestTest extends AbstractUnitRestTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.id").value(info.getId()))
                 .andExpect(jsonPath("$.name").isString())
-                .andExpect(jsonPath("$.name").value(info.getName()));
+                .andExpect(jsonPath("$.name").value(info.getName()))
+                .andExpect(jsonPath("$.audit.createdBy").exists())
+                .andExpect(jsonPath("$.audit.lastModifiedBy").exists())
+                .andExpect(jsonPath("$.audit.creationDate").exists())
+                .andExpect(jsonPath("$.audit.lastModifiedDate").exists());
     }
 
     @Test

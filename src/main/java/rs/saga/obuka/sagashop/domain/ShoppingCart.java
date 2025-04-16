@@ -3,6 +3,7 @@ package rs.saga.obuka.sagashop.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.saga.obuka.sagashop.audit.Audit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ShoppingCart extends BaseEntity<Long> {
+public class ShoppingCart extends Audit<Long> {
 
     @Column
     @NotNull

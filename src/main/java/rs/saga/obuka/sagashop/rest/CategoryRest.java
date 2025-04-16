@@ -10,6 +10,7 @@ import rs.saga.obuka.sagashop.dto.category.CategoryResult;
 import rs.saga.obuka.sagashop.dto.category.CreateCategoryCmd;
 import rs.saga.obuka.sagashop.dto.category.UpdateCategoryCmd;
 import rs.saga.obuka.sagashop.exception.ServiceException;
+import rs.saga.obuka.sagashop.mapper.CategoryMapper;
 import rs.saga.obuka.sagashop.service.CategoryService;
 
 import javax.validation.Valid;
@@ -30,8 +31,8 @@ public class CategoryRest {
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Category save(@RequestBody @Valid CreateCategoryCmd cmd) throws ServiceException {
-        return categoryService.save(cmd);
+    public CategoryInfo save(@RequestBody @Valid CreateCategoryCmd cmd) throws ServiceException {
+        return CategoryMapper.INSTANCE.categoryToCategoryInfo(categoryService.save(cmd));
     }
 
     @PreAuthorize("isAuthenticated()")

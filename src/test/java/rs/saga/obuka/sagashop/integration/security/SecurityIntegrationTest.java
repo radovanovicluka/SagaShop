@@ -100,8 +100,8 @@ public class SecurityIntegrationTest extends AbstractIntegrationTest {
 
     }
 
-    @Test
     @Disabled
+    @Test
     public void testSaveCategoryNotLogged() throws JsonProcessingException {
         CreateCategoryCmd cmd = new CreateCategoryCmd("Category1", "Description1", null, null);
         String jsonInString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cmd);

@@ -10,6 +10,7 @@ import rs.saga.obuka.sagashop.dto.product.ProductInfo;
 import rs.saga.obuka.sagashop.dto.product.ProductResult;
 import rs.saga.obuka.sagashop.dto.product.UpdateProductCmd;
 import rs.saga.obuka.sagashop.exception.ServiceException;
+import rs.saga.obuka.sagashop.mapper.ProductMapper;
 import rs.saga.obuka.sagashop.service.ProductService;
 
 import javax.validation.Valid;
@@ -26,8 +27,8 @@ public class ProductRest {
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Product save(@RequestBody @Valid CreateProductCmd cmd) throws ServiceException {
-        return productService.save(cmd);
+    public ProductInfo save(@RequestBody @Valid CreateProductCmd cmd) throws ServiceException {
+        return ProductMapper.INSTANCE.productToProductInfo(productService.save(cmd));
     }
 
     @PreAuthorize("isAuthenticated()")

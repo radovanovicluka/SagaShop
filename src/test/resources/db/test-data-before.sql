@@ -1,0 +1,1 @@
+insert into user values( 1, 1, '2025-12-31 23:59:59', '2025-12-31 23:59:59', 'default', '$2y$10$U19aC8gsmhW89iDPimijDOfX40bEU3LUFG3paPcWkOWaEUJqhnY..', 'default', 'default', 1, 1)

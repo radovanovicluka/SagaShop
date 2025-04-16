@@ -31,6 +31,10 @@ public class ProductServiceTest extends AbstractIntegrationTest {
         assertNotNull(product.getId());
         assertEquals(cmd.getDescription(), product.getDescription());
         assertEquals(cmd.getName(), product.getName());
+        assertNotNull(product.getCreationDate());
+        assertNotNull(product.getCreatedBy());
+        assertNotNull(product.getLastModifiedBy());
+        assertNotNull(product.getLastModifiedDate());
     }
 
     @Test
@@ -41,6 +45,12 @@ public class ProductServiceTest extends AbstractIntegrationTest {
         assertNotNull(product);
         assertNotNull(product.getId());
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         UpdateProductCmd update = new UpdateProductCmd(product.getId(), product.getPrice(), product.getName(),
                 product.getDescription(), product.getQuantity(), null, null);
         update.setName("update");
@@ -50,6 +60,11 @@ public class ProductServiceTest extends AbstractIntegrationTest {
         assertNotNull(info);
         assertEquals(product.getId(), info.getId());
         assertEquals("update", info.getName());
+        assertNotNull(info.getAudit().getCreationDate());
+        assertNotNull(info.getAudit().getCreatedBy());
+        assertNotNull(info.getAudit().getLastModifiedBy());
+        assertNotNull(info.getAudit().getLastModifiedDate());
+        assertNotEquals(info.getAudit().getCreationDate(), info.getAudit().getLastModifiedDate());
 
     }
 

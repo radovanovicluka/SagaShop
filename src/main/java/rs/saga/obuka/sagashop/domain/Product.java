@@ -1,6 +1,7 @@
 package rs.saga.obuka.sagashop.domain;
 
 import lombok.*;
+import rs.saga.obuka.sagashop.audit.Audit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product extends BaseEntity<Long> {
+public class Product extends Audit<Long> {
 
     @NotNull
     private BigDecimal price;

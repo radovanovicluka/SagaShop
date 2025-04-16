@@ -1,5 +1,6 @@
 package rs.saga.obuka.sagashop.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -25,5 +26,10 @@ public interface ProductMapper {
     ProductInfo productToProductInfo(Product product);
 
     void updateProductCmdToProduct(@MappingTarget Product product, UpdateProductCmd cmd);
+
+    @AfterMapping
+    default void afterMappingDTO(Product product, @MappingTarget ProductInfo productInfo){
+        AuditMapper.INSTANCE.fillAudit(product, productInfo.getAudit());
+    }
 
 }

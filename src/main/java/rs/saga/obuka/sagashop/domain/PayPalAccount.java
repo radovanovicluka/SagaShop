@@ -1,6 +1,7 @@
 package rs.saga.obuka.sagashop.domain;
 
 import lombok.*;
+import rs.saga.obuka.sagashop.audit.Audit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PayPalAccount extends BaseEntity<Long> {
+public class PayPalAccount extends Audit<Long> {
 
     @Column(nullable = false, unique = true)
     @NotNull

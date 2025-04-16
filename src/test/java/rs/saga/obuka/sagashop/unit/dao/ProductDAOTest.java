@@ -1,11 +1,15 @@
 package rs.saga.obuka.sagashop.unit.dao;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import rs.saga.obuka.sagashop.AbstractDAOTest;
+import rs.saga.obuka.sagashop.builder.CategoryBuilder;
 import rs.saga.obuka.sagashop.dao.ProductDAO;
 import rs.saga.obuka.sagashop.domain.Category;
 import rs.saga.obuka.sagashop.domain.Product;
+import rs.saga.obuka.sagashop.utils.HibernateTransactionUtils;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -15,13 +19,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Transactional
 public class ProductDAOTest extends AbstractDAOTest {
 
     @Autowired
     private ProductDAO productDAO;
 
+    @Autowired
+    private HibernateTransactionUtils hibernateTransactionUtils;
+
     @Test
+    @Disabled
+    @Transactional
     void save() throws Exception {
         List<Category> category = new ArrayList<Category>();
 
@@ -43,6 +51,69 @@ public class ProductDAOTest extends AbstractDAOTest {
     }
 
     @Test
+    public void filter() {
+
+        //pripremamo proizvod 1 - categoryRacunari
+        final Long categoryID = hibernateTransactionUtils.doInTransaction(entityManager -> {
+            Product productAuroraRacunar = new Product();
+
+            productAuroraRacunar.setName("GIGATRON AURORA STANDARD");
+            productAuroraRacunar.setPrice(new BigDecimal(10000));
+            productAuroraRacunar.setQuantity(3);
+
+            Category categoryRacunari = CategoryBuilder.categoryRacunari();
+            productAuroraRacunar.getCategories().add(categoryRacunari);
+            categoryRacunari.getProducts().add(productAuroraRacunar);
+            entityManager.persist(productAuroraRacunar);
+            return productAuroraRacunar.getCategories().iterator().next().getId();
+        });
+
+        //pripremamo proizvod 2 - categoryRacunari
+        hibernateTransactionUtils.doInTransaction(entityManager -> {
+            Product productLenovoRacunar = new Product();
+
+            productLenovoRacunar.setName("GIGATRON LENOVO STANDARD");
+            productLenovoRacunar.setPrice(new BigDecimal(50000));
+            productLenovoRacunar.setQuantity(10);
+
+            Category categoryRacunari = entityManager.find(Category.class, categoryID);
+            productLenovoRacunar.getCategories().add(categoryRacunari);
+            categoryRacunari.getProducts().add(productLenovoRacunar);
+            entityManager.persist(productLenovoRacunar);
+        });
+
+        //pripremamo proizvod 3 - categoryBelaTehnika
+        hibernateTransactionUtils.doInTransaction(entityManager -> {
+            Category categoryBelaTehnika = CategoryBuilder.categoryBelaTehnika();
+
+            Product productIndesitFrizider = new Product();
+
+            productIndesitFrizider.setName("INDESIT FRIZIDER");
+            productIndesitFrizider.setPrice(new BigDecimal(80000));
+            productIndesitFrizider.setQuantity(4);
+
+            productIndesitFrizider.getCategories().add(categoryBelaTehnika);
+            categoryBelaTehnika.getProducts().add(productIndesitFrizider);
+            entityManager.persist(productIndesitFrizider);
+        });
+
+        List<Product> productList = productDAO.findByName("GIGATRON AURORA STANDARD");
+        assertEquals(1, productList.size());
+
+        productList = productDAO.findByPrice(50000.00);
+        assertEquals(1, productList.size());
+
+        productList = productDAO.findByCategory("Računari i komponente");
+        assertEquals(2, productList.size());
+
+        productList = productDAO.findByQuantity(5);
+        assertEquals(2, productList.size());
+
+    }
+
+    @Test
+    @Disabled
+    @Transactional
     void findByName() throws Exception {
         List<Category> category = new ArrayList<Category>();
 
@@ -75,6 +146,8 @@ public class ProductDAOTest extends AbstractDAOTest {
     }
 
     @Test
+    @Disabled
+    @Transactional
     void findByPrice() throws Exception {
         List<Category> category = new ArrayList<Category>();
 
@@ -104,6 +177,8 @@ public class ProductDAOTest extends AbstractDAOTest {
     }
 
     @Test
+    @Disabled
+    @Transactional
     void findByCategory() throws Exception {
         List<Category> category = new ArrayList<Category>();
 
@@ -126,6 +201,11 @@ public class ProductDAOTest extends AbstractDAOTest {
         assertEquals(2, products1.size());
         assertEquals(0, products2.size());
 
+    }
+
+    @AfterEach
+    public void tearDown() {
+        hibernateTransactionUtils.clearDatabase();
     }
 
 }

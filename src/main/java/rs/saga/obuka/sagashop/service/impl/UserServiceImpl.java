@@ -135,4 +135,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
+    public User findByUsername(String username) {
+        return userDAO.findByUsername(username);
+    }
 }

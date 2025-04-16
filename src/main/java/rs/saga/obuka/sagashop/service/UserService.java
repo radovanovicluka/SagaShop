@@ -8,6 +8,7 @@ import rs.saga.obuka.sagashop.dto.user.UserInfo;
 import rs.saga.obuka.sagashop.dto.user.UserResult;
 import rs.saga.obuka.sagashop.exception.ServiceException;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface UserService {
@@ -24,4 +25,5 @@ public interface UserService {
 
     void addRole(Long id, Role role) throws ServiceException;
 
+    User findByUsername(@NotNull String username);
 }

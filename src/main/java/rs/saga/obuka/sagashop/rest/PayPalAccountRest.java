@@ -10,6 +10,7 @@ import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountInfo;
 import rs.saga.obuka.sagashop.dto.paypalaccount.PayPalAccountResult;
 import rs.saga.obuka.sagashop.dto.paypalaccount.UpdatePayPalAccountCmd;
 import rs.saga.obuka.sagashop.exception.ServiceException;
+import rs.saga.obuka.sagashop.mapper.PayPalAccountMapper;
 import rs.saga.obuka.sagashop.service.PayPalAccountService;
 
 import javax.validation.Valid;
@@ -26,8 +27,8 @@ public class PayPalAccountRest {
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public PayPalAccount save(@RequestBody @Valid CreatePayPalAccountCmd cmd) throws ServiceException {
-        return payPalAccountService.save(cmd);
+    public PayPalAccountInfo save(@RequestBody @Valid CreatePayPalAccountCmd cmd) throws ServiceException {
+        return PayPalAccountMapper.INSTANCE.payPalAccountToPayPalAccountInfo(payPalAccountService.save(cmd));
     }
 
     @PreAuthorize("isAuthenticated()")

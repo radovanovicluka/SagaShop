@@ -54,4 +54,16 @@ public class ProductDAOImpl extends AbstractDAOImpl<Product, Long> implements Pr
         return entityManager.createQuery(query).getResultList();
     }
 
+    @Override
+    public List<Product> findByQuantity(int quantity) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Product> query = cb.createQuery(Product.class);
+        Root<Product> product = query.from(Product.class);
+        query.select(product).where(cb.lessThan(product.get("quantity"), quantity));
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
 }

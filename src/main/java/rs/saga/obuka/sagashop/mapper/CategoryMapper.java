@@ -1,5 +1,6 @@
 package rs.saga.obuka.sagashop.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -29,5 +30,10 @@ public interface CategoryMapper {
     CategoryInfo categoryToCategoryInfo(Category category);
 
     void updateCategoryCmdToCategory(@MappingTarget Category category, UpdateCategoryCmd cmd);
+
+    @AfterMapping
+    default void afterMappingDTO(Category category, @MappingTarget CategoryInfo categoryInfo){
+        AuditMapper.INSTANCE.fillAudit(category, categoryInfo.getAudit());
+    }
 
 }

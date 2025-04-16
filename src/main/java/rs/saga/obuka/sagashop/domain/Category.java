@@ -1,9 +1,11 @@
 package rs.saga.obuka.sagashop.domain;
 
 import lombok.*;
+import rs.saga.obuka.sagashop.audit.Audit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuppressWarnings("unused")
-public class Category extends BaseEntity<Long> {
+public class Category extends Audit<Long> {
 
     @Column(nullable = false, name = "category_name")
     @NotNull
@@ -29,7 +31,7 @@ public class Category extends BaseEntity<Long> {
     private String description;
 
     @ManyToMany(mappedBy = "categories", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

@@ -5,12 +5,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import rs.saga.obuka.sagashop.dao.RoleDAO;
 import rs.saga.obuka.sagashop.domain.Role;
-import rs.saga.obuka.sagashop.domain.User;
 import rs.saga.obuka.sagashop.dto.user.CreateUserCmd;
+import rs.saga.obuka.sagashop.dto.user.UserInfo;
 import rs.saga.obuka.sagashop.exception.ServiceException;
+import rs.saga.obuka.sagashop.rest.AuthenticationRest;
 import rs.saga.obuka.sagashop.service.*;
 
 /**
@@ -19,6 +26,8 @@ import rs.saga.obuka.sagashop.service.*;
  **/
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = SagashopApplicationTest.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Sql(scripts="classpath:db/test-data-before.sql", executionPhase=Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts="classpath:db/test-data-after.sql", executionPhase= Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public abstract class AbstractIntegrationTest {
 
     @Autowired
@@ -34,7 +43,16 @@ public abstract class AbstractIntegrationTest {
     private PayPalAccountService payPalAccountService;
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     private ShoppingCartService shoppingCartService;
+
+    @Autowired
+    private AuthenticationRest authenticationRest;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private RoleDAO roleDAO;
@@ -44,11 +62,23 @@ public abstract class AbstractIntegrationTest {
         CreateUserCmd createUserCmd1 = new CreateUserCmd("lukar", "pass1", "Luka", "R");
         CreateUserCmd createUserCmd2 = new CreateUserCmd("novicat", "pass2", "Novica", "T");
 
-        User novica, luka;
+        UserInfo novica, luka;
+
+        UserInfo user = userService.findById(1L);
+
+        System.out.println(user.getUsername());
+
+        Authentication authenticate = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), "default"));
+
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         try {
-            luka = userService.save(createUserCmd1);
-            novica = userService.save(createUserCmd2);
+
+            luka = authenticationRest.register(createUserCmd1);
+
+            novica = authenticationRest.register(createUserCmd2);
+
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
@@ -78,13 +108,13 @@ public abstract class AbstractIntegrationTest {
             }
         });
 
-        userService.findAll().forEach(e -> {
-            try {
-                userService.delete(e.getId());
-            } catch (ServiceException serviceException) {
-                serviceException.printStackTrace();
-            }
-        });
+//        userService.findAll().forEach(e -> {
+//            try {
+//                userService.delete(e.getId());
+//            } catch (ServiceException serviceException) {
+//                serviceException.printStackTrace();
+//            }
+//        });
 
         productService.findAll().forEach(e -> {
             try {

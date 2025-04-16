@@ -10,6 +10,7 @@ import rs.saga.obuka.sagashop.dto.user.UpdateUserCmd;
 import rs.saga.obuka.sagashop.dto.user.UserInfo;
 import rs.saga.obuka.sagashop.dto.user.UserResult;
 import rs.saga.obuka.sagashop.exception.ServiceException;
+import rs.saga.obuka.sagashop.mapper.UserMapper;
 import rs.saga.obuka.sagashop.service.UserService;
 
 import javax.validation.Valid;
@@ -26,8 +27,8 @@ public class UserRest {
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public User save(@RequestBody @Valid CreateUserCmd cmd) throws ServiceException {
-        return userService.save(cmd);
+    public UserInfo save(@RequestBody @Valid CreateUserCmd cmd) throws ServiceException {
+        return UserMapper.INSTANCE.userToUserInfo(userService.save(cmd));
     }
 
     @PreAuthorize("isAuthenticated()")

@@ -33,6 +33,10 @@ public class CategoryServiceTest extends AbstractIntegrationTest {
         assertNotNull(category.getId());
         assertEquals(cmd.getDescription(), category.getDescription());
         assertEquals(cmd.getCategoryName(), category.getCategoryName());
+        assertNotNull(category.getCreationDate());
+        assertNotNull(category.getCreatedBy());
+        assertNotNull(category.getLastModifiedBy());
+        assertNotNull(category.getLastModifiedDate());
     }
 
     @Test
@@ -42,6 +46,12 @@ public class CategoryServiceTest extends AbstractIntegrationTest {
         Category category = categoryService.save(cmd);
         assertNotNull(category.getId());
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         //menjamo kategoriju
         UpdateCategoryCmd updateCategoryCmd = new UpdateCategoryCmd(category.getId(), category.getCategoryName(), category.getDescription(), null, null);
         updateCategoryCmd.setCategoryName("promenjena kategorija");
@@ -50,6 +60,11 @@ public class CategoryServiceTest extends AbstractIntegrationTest {
         //proveravamo da li je kategorija promenjena
         CategoryInfo categoryInfo = categoryService.findById(category.getId());
         assertEquals("promenjena kategorija", categoryInfo.getCategoryName());
+        assertNotNull(categoryInfo.getAudit().getCreationDate());
+        assertNotNull(categoryInfo.getAudit().getCreatedBy());
+        assertNotNull(categoryInfo.getAudit().getLastModifiedBy());
+        assertNotNull(categoryInfo.getAudit().getLastModifiedDate());
+        assertNotEquals(categoryInfo.getAudit().getCreationDate(), categoryInfo.getAudit().getLastModifiedDate());
     }
 
     @Test
